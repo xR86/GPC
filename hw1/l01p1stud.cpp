@@ -45,15 +45,17 @@ void Display2() {
    glEnd();
 }
 
+// *************** HOMEWORK STARTS HERE ******************************
 void Display3() {
    // trasare puncte GL_POINTS : deseneaza n puncte
    glColor3f(1,0.1,0.1); // rosu
    glBegin(GL_POINTS); 
-      //glVertex3f(1.0f,1.0f,0.0f);//upper-right corner
-      glVertex3f(-0.5f,-0.5f,0.0f); //lower-left
-      glVertex3f(-0.5f,0.5f,0.0f);  //upper-left
-      glVertex3f(0.5f,0.5f,0.0f);  //upper-right
-      glVertex3f(0.5f,-0.5f,0.0f); //lower-right
+      // glVertex2f(1.0f,1.0f) = glVertex3f(1.0f,1.0f,0.0f)
+      // glVertex2f(x, y)
+      glVertex2f(-0.5f,-0.5f);//lower-left
+      glVertex2f(-0.5f,0.5f); //upper-left
+      glVertex2f(0.5f,0.5f);  //upper-right
+      glVertex2f(0.5f,-0.5f); //lower-right
    glEnd();
 }
 
@@ -61,10 +63,10 @@ void Display4() {
    glColor3f(1,0.1,0.1); // rosu
    // trasare linie poligonala GL_LINE_STRIP : (v0,v1), (v1,v2), (v_{n-2},v_{n-1})
    glBegin(GL_LINE_STRIP); 
-      glVertex3f(1.0f,1.0f,0.0f);  //upper-right
-      glVertex3f(1.0f,0.8f,0.0f); //lower-right
-      glVertex3f(0.5f,0.5f,0.0f);  //middle-upper-right
-      glVertex3f(0.5f,0.3f,0.0f);  //middle-lower-right
+      glVertex2f(1.0f,1.0f); //upper-right
+      glVertex2f(1.0f,0.8f); //lower-right
+      glVertex2f(0.5f,0.5f); //middle-upper-right
+      glVertex2f(0.5f,0.3f); //middle-lower-right
    glEnd();
 }
 
@@ -72,10 +74,10 @@ void Display5() {
    glColor3f(1,0.1,0.1); // rosu
    // trasare linie poligonala inchisa GL_LINE_LOOP : (v0,v1), (v1,v2), (v_{n-1},v0)
    glBegin(GL_LINE_LOOP); 
-      glVertex3f(0.5f,0.5f,0.0f); //upper-left
-      glVertex3f(0.5f,0.3f,0.0f);  //lower-left - order matters
-      glVertex3f(1.0f,1.0f,0.0f);  //upper-right
-      glVertex3f(1.0f,0.8f,0.0f); //lower-right
+      glVertex2f(0.5f,0.5f); //upper-left
+      glVertex2f(0.5f,0.3f); //lower-left - order matters
+      glVertex2f(1.0f,1.0f); //upper-right
+      glVertex2f(1.0f,0.8f); //lower-right
    glEnd();
 }
 
@@ -83,59 +85,68 @@ void Display6() {
    glColor3f(1,0.1,0.1); // rosu
    // trasare triunghiuri GL_TRIANGLES : (v0,v1,v2), (v3,v4,v5), ...
    glBegin(GL_TRIANGLES); 
-      glVertex3f(1.0f,1.0f,0.0f);//upper-right
-      glVertex3f(1.0f,0.8f,0.0f);
-      glVertex3f(0.8f,0.8f,0.0f);
+      glVertex2f(1.0f,1.0f); //upper-right
+      glVertex2f(1.0f,0.8f); //lower-right
+      glVertex2f(0.8f,0.8f); //lower-left
 
-      glVertex3f(-1.0f,-1.0f,0.0f);
-      glVertex3f(-1.0f,-0.8f,0.0f);
-      glVertex3f(-0.8f,-0.8f,0.0f);
+      glVertex2f(-1.0f,-1.0f); //lower-left
+      glVertex2f(-1.0f,-0.8f); //upper-left
+      glVertex2f(-0.8f,-0.8f); //upper-right
    glEnd();
 }
 
 void Display7() {
    // trasare patrulatere GL_QUADS : (v0,v1,v2,v3), (v4,v5,v6,v7), ...
    glBegin(GL_QUADS); 
-      glVertex3f(1.0f,1.0f,0.0f);//upper-right
-      glVertex3f(1.0f,0.5f,0.0f);//lower-right
+      glVertex2f(1.0f,1.0f); //upper-right
+      glVertex2f(1.0f,0.5f); //lower-right
 
-      glVertex3f(0.5f,0.5f,0.0f);//upper-right
-      glVertex3f(0.3f,0.7f,0.0f);//upper-right
+      glVertex2f(0.5f,0.5f); //middle-upper-right
+      glVertex2f(0.3f,0.7f); //lower-right
    glEnd();
 }
 
 void Display8() {
    glColor3f(0.1,0.1,1); // albastru
    // trasare poligon convex GL_QUADS : (v0,v1,v2, ..., v_{n-1})
+   float scaleIni;
+   float x, y;
+   float xLim;
+
+scaleIni = 1.2;
+   x = 0.3 * scaleIni;
+   y = 0.5 * scaleIni;
+   xLim = 0.6 * scaleIni;
+
    glBegin(GL_POLYGON);
-      glVertex3f(-0.3f,0.5f,0.0f);//first vertex
-      glVertex3f(0.3f,0.5f,0.0f);//second vertex
-       glVertex3f(0.6f,0.0f,0.0f);//third vertex
-      glVertex3f(0.3f,-0.5f,0.0f);//fourth vertex
-      glVertex3f(-0.3f,-0.5f,0.0f);//fifth vertex
-       glVertex3f(-0.6f,0.0f,0.0f);//sixth vertex
+      glVertex2f(-x,y);//first vertex
+      glVertex2f( x,y);//second vertex
+      glVertex2f(xLim,0.0f);//third vertex - right limit
+      glVertex2f( x,-y);//fourth vertex
+      glVertex2f(-x,-y);//fifth vertex
+      glVertex2f(-xLim,0.0f);//sixth vertex - left limit
    glEnd();
    
    float scale = 0.65;
    glColor3f(1,0.1,0.1); // rosu
    glBegin(GL_POLYGON);
-      glVertex3f(-0.3f*scale,0.5f*scale,0.0f);//first vertex
-      glVertex3f(0.3f*scale,0.5f*scale,0.0f);//second vertex
-       glVertex3f(0.6f*scale,0.0f*scale,0.0f);//third vertex
-      glVertex3f(0.3f*scale,-0.5f*scale,0.0f);//fourth vertex
-      glVertex3f(-0.3f*scale,-0.5f*scale,0.0f);//fifth vertex
-       glVertex3f(-0.6f*scale,0.0f*scale,0.0f);//sixth vertex
+      glVertex2f(-x*scale,    y*scale);
+      glVertex2f( x*scale,    y*scale);
+      glVertex2f( xLim*scale, 0.0f);
+      glVertex2f( x*scale,   -y*scale);
+      glVertex2f(-x*scale,   -y*scale);
+      glVertex2f(-xLim*scale, 0.0f);
    glEnd();
 
    float scale2 = scale * 0.95;
    glColor3f(1,1,1); // alb
    glBegin(GL_POLYGON);
-      glVertex3f(-0.3f*scale2,0.5f*scale2,0.0f);//first vertex
-      glVertex3f(0.3f*scale2,0.5f*scale2,0.0f);//second vertex
-       glVertex3f(0.6f*scale2,0.0f*scale2,0.0f);//third vertex
-      glVertex3f(0.3f*scale2,-0.5f*scale2,0.0f);//fourth vertex
-      glVertex3f(-0.3f*scale2,-0.5f*scale2,0.0f);//fifth vertex
-       glVertex3f(-0.6f*scale2,0.0f*scale2,0.0f);//sixth vertex
+      glVertex2f(-x*scale2,    y*scale2);
+      glVertex2f( x*scale2,    y*scale2);
+      glVertex2f( xLim*scale2, 0.0f);
+      glVertex2f( x*scale2,   -y*scale2);
+      glVertex2f(-x*scale2,   -y*scale2);
+      glVertex2f(-xLim*scale2, 0.0f);
    glEnd();
 
 }
