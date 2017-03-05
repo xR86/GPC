@@ -97,7 +97,23 @@ void Display2() {
 
 // graficul functiei
 // f(x) = { 1, x=0 ; d(x)/x, 1 < x < 100}
-void Display3();
+void Display3(){
+   double ratia = 0.8; //0.8
+
+   glColor3f(1,0.1,0.1); // rosu
+   glLineWidth(1);
+   //glScalef( 1, 2, 1);
+   glBegin(GL_LINE_STRIP); 
+   glVertex2f(0,1);
+   for (double x = 1; x < 100; x += ratia) {
+      double y;
+      y = fabs(round(x) - x) / x;
+      //printf("%f %f", x, y);
+      
+      glVertex2f(x/125, y*2);
+   }
+   glEnd();
+}
 
 //melcul lui Pascal
 //  x = 2 * (a * cos(t) + b) * cos(t)
@@ -151,7 +167,11 @@ void Display5(){
    }
    glEnd();
 
+   double ratia2 = 0.0001;
+   //glClear(GL_COLOR_BUFFER_BIT);
+
    glColor3f(1,0.1,0.1); // rosu
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
    glBegin(GL_TRIANGLES); 
    for(double t = -pi/2; t < pi/2; t+= ratia){
       //printf('', t);
@@ -160,13 +180,20 @@ void Display5(){
       x = a / (4 * pow(cos(t), 2) - 3);
       y = a * tan(t) / (4 * pow(cos(t), 2) - 3);
       if (x <= 0 && y >= 0 && x >=-1 && y <= 1){
-         glVertex2d(-1,1);
-         glVertex2d(x,y);
-         //glVertex2d(x+ratia, y+ratia);
+         //if (! (x + ratia == 0 || x - ratia == 0 || 
+         //      y + ratia == 0 || y - ratia == 0)){
+         if (! (x >= -0.2 && x <= -0.09 ) && 
+               y > 0.25 ){
+            glVertex2d(-1,1);
+            glVertex2d(x,y); //close enough, elimina mijlocul
+            //glVertex2d(x - ratia2,y - ratia2);
+            //glVertex2d(x + ratia2,y + ratia2);
+            ratia2 += 0.0001; //0.005
+         }
       }
+      ratia2 += 0.0003; //0.005
    }
    glEnd();
-
 }
 
 //cicloida
@@ -233,6 +260,51 @@ void Display8(){
    glEnd();
 }
 
+//lemniscata lui Bernoulli
+void Display9(){
+   double pi = 4 * atan(1.0);
+   double a,x,y,t,r;
+   double ratia = 0.005;
+   a = 0.4;
+
+
+   glColor3f(1,0.1,0.1);
+   glBegin(GL_LINE_STRIP);
+
+   for (t = pi/4 - ratia; t >-pi/4; t -= ratia){
+      r = -a * (sqrt( 2 * cos( 2 * t ) ) );
+      x = r * cos(t);
+      y = r * sin(t);
+      glVertex2f(x,y);
+   }
+   for (t = -pi/4 +ratia; t < pi/4; t += ratia){
+      r = a * (sqrt( 2 * cos( 2 * t ) ) );
+      x = r * cos(t);
+      y = r * sin(t);
+      glVertex2f(x,y);
+   }
+   glEnd();
+}
+
+//spirala logaritmica
+void Display10(){
+   double pi = 4 * atan(1.0);
+   double a,x,y,t,r;
+   double e = 2.71828;
+   double ratia = 0.05;
+   a = 0.02;
+
+   glColor3f(1,0.1,0.1);
+   glBegin(GL_LINE_STRIP);
+ 
+  for (t = 0; t < 100; t += ratia){
+      r = a * pow(e,1+t);
+      x = r * cos(t);
+      y = r * sin(t);
+      glVertex2f(x,y);
+   }
+   glEnd();
+}
 
 
 void Init(void) {
@@ -256,6 +328,9 @@ void Display(void) {
    case '2':
       Display2();
       break;
+   case '3':
+      Display3();
+      break;
    case '4':
       Display4();
       break;
@@ -270,6 +345,12 @@ void Display(void) {
       break;
    case '8':
       Display8();
+      break;
+   case '9':
+      Display9();
+      break;
+   case '0':
+      Display10();
       break;
    default:
       break;
