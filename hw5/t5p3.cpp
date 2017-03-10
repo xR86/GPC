@@ -1,10 +1,10 @@
-#include <GL/glut.h>
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
 #include <float.h>
+
+#include <GL/freeglut.h>
 
 // dimensiunea ferestrei in pixeli
 #define dim 300
@@ -27,7 +27,7 @@ public:
     m.y = y;
   }
 
-  C2coord(C2coord &p) 
+  C2coord(const C2coord &p) 
   {
     m.x = p.m.x;
     m.y = p.m.y;
@@ -61,7 +61,7 @@ public:
   CPunct(double x, double y) : C2coord(x, y)
   {}
 
-  CPunct &operator=(CPunct &p)
+  CPunct &operator=(const CPunct &p)
   {
     m.x = p.m.x;
     m.y = p.m.y;
@@ -500,8 +500,11 @@ void Display4() {
 }
 
 void Init(void) {
+
    glClearColor(1.0,1.0,1.0,1.0);
+
    glLineWidth(1);
+
    glPointSize(3);
 
    glPolygonMode(GL_FRONT, GL_LINE);
@@ -539,25 +542,31 @@ void Display(void)
   glFlush();
 }
 
-void Reshape(int w, int h) {
+void Reshape(int w, int h) 
+{
    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 }
 
-void KeyboardFunc(unsigned char key, int x, int y) {
+void KeyboardFunc(unsigned char key, int x, int y) 
+{
    prevKey = key;
    if (key == 27) // escape
       exit(0);
    glutPostRedisplay();
 }
 
-void MouseFunc(int button, int state, int x, int y) {
+void MouseFunc(int button, int state, int x, int y) 
+{
 }
 
 int main(int argc, char** argv) 
 {
   glutInit(&argc, argv);
+
   glutInitWindowSize(dim, dim);
+
   glutInitWindowPosition(100, 100);
+
   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
 
   glutCreateWindow (argv[0]);
@@ -565,14 +574,16 @@ int main(int argc, char** argv)
   Init();
 
   glutReshapeFunc(Reshape);
+
   glutKeyboardFunc(KeyboardFunc);
+
   glutMouseFunc(MouseFunc);
+
   glutDisplayFunc(Display);
 
   glutMainLoop();
 
   return 0;
 }
-
 
 

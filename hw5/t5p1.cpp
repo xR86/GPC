@@ -1,10 +1,10 @@
-#include <GL/glut.h>
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
 #include <float.h>
+
+#include <GL/freeglut.h>
 
 // dimensiunea ferestrei in pixeli
 #define dim 300
@@ -25,7 +25,7 @@ public:
   CComplex(const CComplex &c) : re(c.re), im(c.im) {}
 	~CComplex() {}
 
-  CComplex &operator=(CComplex &c) 
+  CComplex &operator=(const CComplex &c) 
   {
     re = c.re;
     im = c.im;
@@ -53,7 +53,7 @@ public:
     return rez;
   }
 
-	friend CComplex operator+(CComplex &c1, CComplex &c2);
+	friend CComplex operator+(const CComplex &c1, const CComplex &c2);
 	friend CComplex operator*(CComplex &c1, CComplex &c2);
 
 	void print(FILE *f) 
@@ -65,7 +65,7 @@ private:
   double re, im;
 };
 
-CComplex operator+(CComplex &c1, CComplex &c2) 
+CComplex operator+(const CComplex &c1, const CComplex &c2) 
 {
 	CComplex rez(c1.re + c2.re, c1.im + c2.im);
 	return rez;
@@ -83,6 +83,7 @@ public:
   CJuliaFatou()
   {
     // m.c se initializeaza implicit cu 0+0i
+
     m.nriter = NRITER_JF;
     m.modmax = MODMAX_JF;
   }
@@ -201,25 +202,26 @@ void Display2() {
 void Init(void) {
 
    glClearColor(1.0,1.0,1.0,1.0);
+
    glLineWidth(1);
 
-   // glPointSize(3);
+//   glPointSize(3);
 
    glPolygonMode(GL_FRONT, GL_LINE);
 }
 
 void Display(void) {
   switch(prevKey) {
-    case '1':
-      glClear(GL_COLOR_BUFFER_BIT);
-      Display1();
-      break;
-    case '2':
-      glClear(GL_COLOR_BUFFER_BIT);
-      Display2();
-      break;
-    default:
-      break;
+  case '1':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display1();
+    break;
+  case '2':
+    glClear(GL_COLOR_BUFFER_BIT);
+    Display2();
+    break;
+  default:
+    break;
   }
 
   glFlush();
@@ -242,20 +244,28 @@ void MouseFunc(int button, int state, int x, int y) {
 int main(int argc, char** argv) {
 
    glutInit(&argc, argv);
+   
    glutInitWindowSize(dim, dim);
+
    glutInitWindowPosition(100, 100);
 
    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+
    glutCreateWindow (argv[0]);
 
    Init();
 
    glutReshapeFunc(Reshape);
+   
    glutKeyboardFunc(KeyboardFunc);
+   
    glutMouseFunc(MouseFunc);
+
    glutDisplayFunc(Display);
    
    glutMainLoop();
 
    return 0;
 }
+
+
