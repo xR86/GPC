@@ -1,6 +1,7 @@
 all: clean build
 
 LDFLAGS = -lglut -lGL -lGLU
+FLAGS = -v -g -Wall -c -traditional-cpp
 
 build: 
 	g++ -o t5p1.bin t5p1.cpp $(LDFLAGS)

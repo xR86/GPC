@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <float.h>
 
+#include <string.h>
+
 #include <GL/freeglut.h>
 
 // dimensiunea ferestrei in pixeli
@@ -12,6 +14,17 @@
 unsigned char prevKey;
 int nivel = 0;
 
+
+//Display bitmap
+void displayBitmap(const char* str){
+  for(int i = 0; i < strlen(str); i++){
+    glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
+  }
+  
+}
+
+
+//other classes
 
 class C2coord
 {
@@ -352,7 +365,176 @@ public:
   }
 };
 
+class CSierpinskiCarpet
+{
+public:
+  void sierpinskiCarpet(double lungime, int nivel, CPunct &p, CVector &v, int d)
+  {
+    if (nivel == 0) 
+    {
+    }
+    else
+    {
+      v.rotatie(d * 90);
+      sierpinskiCarpet(lungime, nivel - 1, p, v, -d);
 
+      v.deseneaza(p, lungime);
+      p = v.getDest(p, lungime);
+
+      v.rotatie(-d * 90);
+      sierpinskiCarpet(lungime, nivel - 1, p, v, d);
+
+      v.deseneaza(p, lungime);
+      p = v.getDest(p, lungime);
+
+      sierpinskiCarpet(lungime, nivel - 1, p, v, d);
+
+      v.rotatie(-d * 90);
+      v.deseneaza(p, lungime);
+      p = v.getDest(p, lungime);
+      
+      sierpinskiCarpet(lungime, nivel - 1, p, v, -d);
+
+      v.rotatie(d * 90);
+    }
+  }
+
+  void afisare(double lungime, int nivel)
+  {
+    CVector v(0.0, 1.0);
+    CPunct p(0.0, 0.0);
+
+    sierpinskiCarpet(lungime, nivel, p, v, 1);
+  }
+};
+
+class CArborePerronInversat
+{
+public:
+  void arborePerronInversat(double lungime, 
+                    int nivel, 
+                    double factordiviziune, 
+                    CPunct p, 
+                    CVector v)
+  {
+    assert(factordiviziune != 0);
+    CPunct p1, p2;
+    if (nivel == 0) 
+    {
+    }
+    else
+    {
+      // v.rotatie(30);
+      // v.deseneaza(p, lungime);
+      // p1 = v.getDest(p, lungime);
+      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+      // v.rotatie(-90);
+      // v.deseneaza(p, lungime);
+      // p1 = v.getDest(p, lungime);
+      // p2 = p1;
+
+      // v.rotatie(-30);
+      // v.deseneaza(p1, lungime);
+      // p1 = v.getDest(p1, lungime);
+      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+      // p1 = p2;
+      // v.rotatie(90);
+      // v.deseneaza(p1, lungime);
+      // p1 = v.getDest(p1, lungime);
+      // p2 = p1;
+
+      // v.rotatie(30);
+      // v.deseneaza(p1, lungime);
+      // p1 = v.getDest(p1, lungime);
+      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+      // p1 = p2;
+      // v.rotatie(-90);
+      // v.deseneaza(p1, lungime);
+      // p1 = v.getDest(p1, lungime);
+      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+    
+      v.rotatie(30);
+      v.deseneaza(p, lungime);
+      p1 = v.getDest(p, lungime);
+      arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+      v.rotatie(-90);
+      v.deseneaza(p, lungime);
+      p1 = v.getDest(p, lungime);
+      p2 = p1;
+
+      v.rotatie(-30);
+      v.deseneaza(p1, lungime);
+      p1 = v.getDest(p1, lungime);
+      arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+      p1 = p2;
+      v.rotatie(90);
+      v.deseneaza(p1, lungime);
+      p1 = v.getDest(p1, lungime);
+      p2 = p1;
+
+      v.rotatie(30);
+      v.deseneaza(p1, lungime);
+      p1 = v.getDest(p1, lungime);
+      arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+
+      p1 = p2;
+      v.rotatie(-90);
+      v.deseneaza(p1, lungime);
+      p1 = v.getDest(p1, lungime);
+      arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
+    }
+  }
+
+  void afisare(double lungime, int nivel)
+  {
+    CVector v(0.0, -1.0);
+    CPunct p(0.5, 2.0);
+
+    v.deseneaza(p, 0.25);
+    p = v.getDest(p, 0.25);
+    arborePerronInversat(lungime, nivel, 0.4, p, v);
+  }
+};
+
+class CSierpinskiArrowhead
+{
+public:
+  void sierpinskiArrowhead(double lungime, int nivel, CPunct &p, CVector &v, int d)
+  {
+    if (nivel == 0) 
+    {
+    }
+    else
+    {
+      v.rotatie(d * 90);
+      sierpinskiArrowhead(lungime, nivel - 1, p, v, -d);
+
+      v.deseneaza(p, lungime);
+      p = v.getDest(p, lungime);
+
+      v.rotatie(-d * 90);
+      sierpinskiArrowhead(lungime, nivel - 1, p, v, d);
+
+    }
+  }
+
+  void afisare(double lungime, int nivel)
+  {
+    CVector v(0.0, 1.0);
+    CPunct p(0.0, 0.0);
+
+    sierpinskiArrowhead(lungime, nivel, p, v, 1);
+  }
+};
+
+
+
+// ---------------DISPLAYS------------------------------------
 
 // afisare curba lui Koch "fulg de zapada"
 void Display1() {
@@ -362,30 +544,11 @@ void Display1() {
   char c[3];
   sprintf(c, "%2d", nivel);
   glRasterPos2d(-0.98,-0.98);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+  char str[80] = "Nivel=";
+  displayBitmap(strcat(str, c));
 
   glRasterPos2d(-1.0,0.9);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'c');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'u');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'u');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'K');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'o');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'c');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'h');
+  displayBitmap("curba lui Koch");
 
   nivel++;
 }
@@ -398,28 +561,11 @@ void Display2() {
   char c[3];
   sprintf(c, "%2d", nivel);
   glRasterPos2d(-0.98,-0.98);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+  char str[80] = "Nivel=";
+  displayBitmap(strcat(str, c));
 
   glRasterPos2d(-1.0,0.9);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'o');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'n');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
+  displayBitmap("arbore binar");
 
   nivel++;
 }
@@ -431,29 +577,11 @@ void Display3() {
   char c[3];
   sprintf(c, "%2d", nivel);
   glRasterPos2d(-0.98,-0.98);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+  char str[80] = "Nivel=";
+  displayBitmap(strcat(str, c));
 
   glRasterPos2d(-1.0,-0.9);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'o');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'P');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'o');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'n');
+  displayBitmap("arbore Perron");
 
   glPushMatrix();
   glLoadIdentity();
@@ -472,29 +600,74 @@ void Display4() {
   char c[3];
   sprintf(c, "%2d", nivel);
   glRasterPos2d(-0.98,-0.98);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'N');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'v');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, '=');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[0]);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[1]);
+  char str[80] = "Nivel=";
+  displayBitmap(strcat(str, c));
 
   glRasterPos2d(-1.0,-0.9);
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'c');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'u');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'a');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, ' ');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'H');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'i');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'l');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'b');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'e');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 'r');
-  glutBitmapCharacter(GLUT_BITMAP_9_BY_15, 't');
+
+  displayBitmap("curba Hilbert");
+
+  nivel++;
+}
+
+//Sierpinski carpet
+void Display5() {
+  CSierpinskiCarpet csc;
+  csc.afisare(0.05, nivel);
+
+
+  //char display
+  char c[3];
+  sprintf(c, "%2d", nivel);
+  glRasterPos2d(-0.98,-0.98);
+  char str[80] = "Nivel=";
+  displayBitmap(strcat(str, c));
+
+  glRasterPos2d(-1.0,-0.9);
+
+  displayBitmap("Sierpinski carpet");
+
+  nivel++;
+}
+
+//inverted Perron
+void Display6() {
+  
+  CArborePerronInversat cap;
+
+  char c[3];
+  sprintf(c, "%2d", nivel);
+  glRasterPos2d(-0.98,-0.98);
+  char str[80] = "Nivel=";
+  displayBitmap(strcat(str, c));
+
+  glRasterPos2d(-1.0,-0.9);
+  displayBitmap("inverted Perron");
+
+  glPushMatrix();
+  glLoadIdentity();
+  glScaled(0.4, 0.4, 1);
+  glTranslated(-0.5, -0.5, 0.0);
+  cap.afisare(1, nivel);
+  glPopMatrix();
+  nivel++;
+}
+
+//Sierpinski arrowhead
+void Display7() {
+    
+
+
+  //char display
+  char c[3];
+  sprintf(c, "%2d", nivel);
+  glRasterPos2d(-0.98,-0.98);
+  char str[80] = "Nivel=";
+  displayBitmap(strcat(str, c));
+
+  glRasterPos2d(-1.0,-0.9);
+
+  displayBitmap("Sierpinski arrowhead");
 
   nivel++;
 }
@@ -502,9 +675,7 @@ void Display4() {
 void Init(void) {
 
    glClearColor(1.0,1.0,1.0,1.0);
-
    glLineWidth(1);
-
    glPointSize(3);
 
    glPolygonMode(GL_FRONT, GL_LINE);
@@ -534,6 +705,18 @@ void Display(void)
     case '4':
       glClear(GL_COLOR_BUFFER_BIT);
       Display4();
+      break;
+    case '5':
+      glClear(GL_COLOR_BUFFER_BIT);
+      Display5();
+      break;
+    case '6':
+      glClear(GL_COLOR_BUFFER_BIT);
+      Display6();
+      break;
+    case '7':
+      glClear(GL_COLOR_BUFFER_BIT);
+      Display7();
       break;
     default:
       break;
@@ -585,5 +768,3 @@ int main(int argc, char** argv)
 
   return 0;
 }
-
-
