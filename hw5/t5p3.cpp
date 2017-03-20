@@ -424,76 +424,46 @@ public:
     }
     else
     {
-      // v.rotatie(30);
-      // v.deseneaza(p, lungime);
-      // p1 = v.getDest(p, lungime);
-      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
-
-      // v.rotatie(-90);
-      // v.deseneaza(p, lungime);
-      // p1 = v.getDest(p, lungime);
-      // p2 = p1;
-
-      // v.rotatie(-30);
-      // v.deseneaza(p1, lungime);
-      // p1 = v.getDest(p1, lungime);
-      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
-
-      // p1 = p2;
-      // v.rotatie(90);
-      // v.deseneaza(p1, lungime);
-      // p1 = v.getDest(p1, lungime);
-      // p2 = p1;
-
-      // v.rotatie(30);
-      // v.deseneaza(p1, lungime);
-      // p1 = v.getDest(p1, lungime);
-      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
-
-      // p1 = p2;
-      // v.rotatie(-90);
-      // v.deseneaza(p1, lungime);
-      // p1 = v.getDest(p1, lungime);
-      // arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
     
-      v.rotatie(30);
+      v.rotatie(-45); //orig: 30
       v.deseneaza(p, lungime);
       p1 = v.getDest(p, lungime);
       arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
 
-      v.rotatie(-90);
+      v.rotatie(90); //orig:-90
       v.deseneaza(p, lungime);
       p1 = v.getDest(p, lungime);
       p2 = p1;
 
-      v.rotatie(-30);
+      //de aici, mod1
+      v.rotatie(15); //orig:-30, mod1: 30
       v.deseneaza(p1, lungime);
       p1 = v.getDest(p1, lungime);
       arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
 
       p1 = p2;
-      v.rotatie(90);
+      v.rotatie(-60); //orig: 90, mod1: -90
       v.deseneaza(p1, lungime);
       p1 = v.getDest(p1, lungime);
       p2 = p1;
 
-      v.rotatie(30);
-      v.deseneaza(p1, lungime);
-      p1 = v.getDest(p1, lungime);
+      v.rotatie(-90); //orig: 30, mod1: -30
+      v.deseneaza(p1, lungime/2); //halfed
+      p1 = v.getDest(p1, lungime/2); //halfed
       arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
 
       p1 = p2;
-      v.rotatie(-90);
-      v.deseneaza(p1, lungime);
-      p1 = v.getDest(p1, lungime);
+      v.rotatie(90 + 15); //orig: -90, mod1: 90
+      v.deseneaza(p1, lungime/2); //halfed
+      p1 = v.getDest(p1, lungime/2); //halfed
       arborePerronInversat(lungime * factordiviziune, nivel - 1, factordiviziune, p1, v);
     }
   }
 
   void afisare(double lungime, int nivel)
   {
-    CVector v(0.0, -1.0);
-    CPunct p(0.5, 2.0);
+    CVector v(0.0, -1.0); //orig: 0.0, -1.0 -> schimbat sens
+    CPunct p(0.0, 2.5); //orig: 0.0, -1.0 -> schimbat origine
 
     v.deseneaza(p, 0.25);
     p = v.getDest(p, 0.25);
