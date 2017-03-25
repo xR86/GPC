@@ -87,6 +87,12 @@ public:
     y = m.y;
   }
 
+  void setxy(double x, double y) //new, should work
+  {
+    m.x = x;
+    m.y = y;
+  }
+
   int operator==(CPunct &p)
   {
     return ((m.x == p.m.x) && (m.y == p.m.y));
@@ -368,43 +374,89 @@ public:
 class CSierpinskiCarpet
 {
 public:
-  void sierpinskiCarpet(double lungime, int nivel, CPunct &p, CVector &v, int d)
+  void sierpinskiCarpet(double lungime, 
+                    int nivel, 
+                    double factordiviziune, 
+                    CPunct p)
   {
+    assert(factordiviziune != 0);
+    CPunct tr;
     if (nivel == 0) 
     {
     }
     else
     {
-      v.rotatie(d * 90);
-      sierpinskiCarpet(lungime, nivel - 1, p, v, -d);
+      double x, y;
 
-      v.deseneaza(p, lungime);
-      p = v.getDest(p, lungime);
 
-      v.rotatie(-d * 90);
-      sierpinskiCarpet(lungime, nivel - 1, p, v, d);
+      p.getxy(x, y);
+      CPunct p1(x - 0.5, y + 0.5);
 
-      v.deseneaza(p, lungime);
-      p = v.getDest(p, lungime);
+      //if (x >= -1.0 && x <= 1.0 && y >= -1.0 && y <= 1.0){
+        //CVector v2 = createSquare(lungime, p1);
+        
+        tr = createSquare(lungime, p1);
+        tr.getxy(x, y);
+        //CPunct p2(x - lungime/3, y + lungime/3);
+        p1.setxy(x - lungime/3, y + lungime/3);
+        
+        //sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
-      sierpinskiCarpet(lungime, nivel - 1, p, v, d);
+        //recursed
+        lungime = lungime * factordiviziune;
 
-      v.rotatie(-d * 90);
-      v.deseneaza(p, lungime);
-      p = v.getDest(p, lungime);
+        p1.setxy(x - 0.5, y + 0.5);
+        tr = createSquare(lungime, p1);
+        tr.getxy(x, y);
+        p1.setxy(x + lungime/3, y + lungime/3);
+
+        //recursed
+        lungime = lungime * factordiviziune;
+
+        p1.setxy(x - 0.5, y + 0.5);
+        tr = createSquare(lungime, p1);
+        tr.getxy(x, y);
+        p1.setxy(x + lungime/3, y + lungime/3);
+
+
+
+        // tr.getxy(x, y);
+        // CPunct p2(x, y + lungime / 3.0); // x,y from p1
+        // tr = createSquare(lungime, p2);
+
+        //sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  tr);
+      //}
       
-      sierpinskiCarpet(lungime, nivel - 1, p, v, -d);
-
-      v.rotatie(d * 90);
     }
+  }
+
+  CPunct createSquare(double lungime, CPunct origin){
+    CVector v(lungime, 0.0); //orig: 0.0, -1.0 -> schimbat sens
+    CPunct p1, p2, p3;
+    double x, y;
+
+    v.deseneaza(origin, lungime);
+    origin = v.getDest(origin, lungime);
+
+    v.rotatie(-90);
+    v.deseneaza(origin, lungime);
+    p1 = v.getDest(origin, lungime);
+
+    v.rotatie(-90);
+    v.deseneaza(p1, lungime);
+    p2 = v.getDest(p1, lungime);
+
+    v.rotatie(-90);
+    v.deseneaza(p2, lungime);
+    p3 = v.getDest(p2, lungime);
+
+    return p3;
   }
 
   void afisare(double lungime, int nivel)
   {
-    CVector v(0.0, 1.0);
-    CPunct p(0.0, 0.0);
-
-    sierpinskiCarpet(lungime, nivel, p, v, 1);
+    CPunct p(0.0, 0.0); //orig: 0.0, -1.0 -> schimbat origine
+    sierpinskiCarpet(lungime, nivel, 0.33, p);
   }
 };
 
@@ -583,7 +635,7 @@ void Display4() {
 //Sierpinski carpet
 void Display5() {
   CSierpinskiCarpet csc;
-  csc.afisare(0.05, nivel);
+  //csc.afisare(0.05, nivel);
 
 
   //char display
@@ -596,6 +648,13 @@ void Display5() {
   glRasterPos2d(-1.0,-0.9);
 
   displayBitmap("Sierpinski carpet");
+
+  glPushMatrix();
+  glLoadIdentity();
+  glScaled(0.4, 0.4, 1);
+  // glTranslated(-0.5, -0.5, 0.0);
+  csc.afisare(1, nivel);
+  glPopMatrix();
 
   nivel++;
 }
