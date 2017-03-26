@@ -383,6 +383,12 @@ public:
     CPunct tr;
     if (nivel == 0) 
     {
+      double x, y;
+      p.getxy(x, y);
+      CPunct p1(x - 0.5, y + 0.5);
+
+      tr = createSquare(lungime, p1);
+
     }
     else
     {
@@ -392,7 +398,7 @@ public:
       p.getxy(x, y);
       CPunct p1(x - 0.5, y + 0.5);
 
-      //if (x >= -1.0 && x <= 1.0 && y >= -1.0 && y <= 1.0){
+      if (x >= -3.0 && x <= 3.0 && y >= -3.0 && y <= 3.0){
         //CVector v2 = createSquare(lungime, p1);
         
         tr = createSquare(lungime, p1);
@@ -400,32 +406,63 @@ public:
         //CPunct p2(x - lungime/3, y + lungime/3);
         p1.setxy(x - lungime/3, y + lungime/3);
         
-        //sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+
+        // tr = createSquare(lungime, p1);
+        // tr.getxy(x, y);
+        //CPunct p2(x - lungime/3, y + lungime/3);
+        //p1.setxy(x + lungime/3, y + lungime/3);
+
+        p1.setxy(x + lungime/3 * 2, y + lungime/3);
+        
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+
+        p1.setxy(x + lungime/3 * 5, y + lungime/3);
+      
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+
+        p1.setxy(x - lungime/3, y - lungime/3 * 2);
+      
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+
+        p1.setxy(x - lungime/3, y - lungime/3 * 5);
+      
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+
+        p1.setxy(x + lungime/3 * 5, y - lungime/3 * 2);
+      
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+
+        p1.setxy(x + lungime/3 * 2, y - lungime/3 * 5);
+      
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
+
+        p1.setxy(x + lungime/3 * 5, y - lungime/3 * 5);
+      
+        sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
         //recursed
-        lungime = lungime * factordiviziune;
+        // lungime = lungime * factordiviziune;
 
-        p1.setxy(x - 0.5, y + 0.5);
-        tr = createSquare(lungime, p1);
-        tr.getxy(x, y);
-        p1.setxy(x + lungime/3, y + lungime/3);
+        // CPunct p2(x - 0.5, y + 0.5);
+        // tr = createSquare(lungime, p2);
+        // tr.getxy(x, y);
+        // p2.setxy(x + lungime/3, y + lungime/3);
 
-        //recursed
-        lungime = lungime * factordiviziune;
+        // sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p2);
 
-        p1.setxy(x - 0.5, y + 0.5);
-        tr = createSquare(lungime, p1);
-        tr.getxy(x, y);
-        p1.setxy(x + lungime/3, y + lungime/3);
-
-
+        //
+        // p1.setxy(x - 0.5, y + 0.5);
+        // tr = createSquare(lungime, p1);
+        // tr.getxy(x, y);
+        // p1.setxy(x + lungime/3, y + lungime/3);
 
         // tr.getxy(x, y);
         // CPunct p2(x, y + lungime / 3.0); // x,y from p1
         // tr = createSquare(lungime, p2);
 
         //sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  tr);
-      //}
+      }
       
     }
   }
@@ -456,7 +493,7 @@ public:
   void afisare(double lungime, int nivel)
   {
     CPunct p(0.0, 0.0); //orig: 0.0, -1.0 -> schimbat origine
-    sierpinskiCarpet(lungime, nivel, 0.33, p);
+    sierpinskiCarpet(lungime, nivel, 0.5, p);
   }
 };
 
@@ -533,17 +570,39 @@ public:
     }
     else
     {
-      v.rotatie(d * 90);
+
+      // if ( 0 == (order & 1) ) {
+      //   curve( order, length, +60);
+      // }
+      // else  order is odd  {
+      //     turn( +60);
+      //     curve( order, length, -60);
+      // }
+
+      v.rotatie(d * 60);
       sierpinskiArrowhead(lungime, nivel - 1, p, v, -d);
 
       v.deseneaza(p, lungime);
       p = v.getDest(p, lungime);
 
-      v.rotatie(-d * 90);
+      v.rotatie(-d * 60);
       sierpinskiArrowhead(lungime, nivel - 1, p, v, d);
 
     }
   }
+
+  // void curve( unsigned order, double length, int angle)
+  // {
+  //     if ( 0 == order ) {
+  //         draw_line( length);
+  //     } else {
+  //         curve( order - 1, length / 2, - angle);
+  //         turn( + angle);
+  //         curve( order - 1, length / 2, + angle);
+  //         turn( + angle);
+  //         curve( order - 1, length / 2, - angle);
+  //     }
+  // }
 
   void afisare(double lungime, int nivel)
   {
@@ -685,6 +744,8 @@ void Display6() {
 //Sierpinski arrowhead
 void Display7() {
     
+  CSierpinskiArrowhead csa;
+  csa.afisare(0.05, nivel);
 
 
   //char display
