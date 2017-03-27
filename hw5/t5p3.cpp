@@ -200,18 +200,15 @@ public:
       segmentKoch(lungime / 3.0, nivel - 1, p, v);
       p1 = v.getDest(p, lungime / 3.0);
       v.rotatie(60);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
+
       segmentKoch(lungime / 3.0, nivel - 1, p1, v);
       p1 = v.getDest(p1, lungime / 3.0);
       v.rotatie(-120);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
+
       segmentKoch(lungime / 3.0, nivel - 1, p1, v);
       p1 = v.getDest(p1, lungime / 3.0);
       v.rotatie(60);
-  //    v.print(stderr);
-  //    fprintf(stderr, "\n");
+
       segmentKoch(lungime / 3.0, nivel - 1, p1, v);
     }
   }
@@ -412,33 +409,29 @@ public:
         // tr.getxy(x, y);
         //CPunct p2(x - lungime/3, y + lungime/3);
         //p1.setxy(x + lungime/3, y + lungime/3);
-
-        p1.setxy(x + lungime/3 * 2, y + lungime/3);
         
+        float med = 2; //2.3, but yields strange
+        float fin = 5; //5.4, but yields strange
+
+        p1.setxy(x + lungime/3 * med, y + lungime/3);
         sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
-        p1.setxy(x + lungime/3 * 5, y + lungime/3);
-      
+        p1.setxy(x + lungime/3 * fin, y + lungime/3);
         sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
-        p1.setxy(x - lungime/3, y - lungime/3 * 2);
-      
+        p1.setxy(x - lungime/3, y - lungime/3 * med);
         sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
-        p1.setxy(x - lungime/3, y - lungime/3 * 5);
-      
+        p1.setxy(x - lungime/3, y - lungime/3 * fin);
         sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
-        p1.setxy(x + lungime/3 * 5, y - lungime/3 * 2);
-      
+        p1.setxy(x + lungime/3 * fin, y - lungime/3 * med);
         sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
-        p1.setxy(x + lungime/3 * 2, y - lungime/3 * 5);
-      
+        p1.setxy(x + lungime/3 * med, y - lungime/3 * fin);
         sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
-        p1.setxy(x + lungime/3 * 5, y - lungime/3 * 5);
-      
+        p1.setxy(x + lungime/3 * fin, y - lungime/3 * fin);
         sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p1);
 
         //recursed
@@ -450,18 +443,7 @@ public:
         // p2.setxy(x + lungime/3, y + lungime/3);
 
         // sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  p2);
-
-        //
-        // p1.setxy(x - 0.5, y + 0.5);
-        // tr = createSquare(lungime, p1);
-        // tr.getxy(x, y);
-        // p1.setxy(x + lungime/3, y + lungime/3);
-
-        // tr.getxy(x, y);
-        // CPunct p2(x, y + lungime / 3.0); // x,y from p1
-        // tr = createSquare(lungime, p2);
-
-        //sierpinskiCarpet(lungime * factordiviziune, nivel - 1, factordiviziune,  tr);
+      
       }
       
     }
@@ -837,21 +819,15 @@ int main(int argc, char** argv)
   glutInit(&argc, argv);
 
   glutInitWindowSize(dim, dim);
-
   glutInitWindowPosition(100, 100);
-
   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-
   glutCreateWindow (argv[0]);
 
   Init();
 
   glutReshapeFunc(Reshape);
-
   glutKeyboardFunc(KeyboardFunc);
-
   glutMouseFunc(MouseFunc);
-
   glutDisplayFunc(Display);
 
   glutMainLoop();

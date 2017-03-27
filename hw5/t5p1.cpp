@@ -246,26 +246,18 @@ int main(int argc, char** argv) {
    glutInit(&argc, argv);
    
    glutInitWindowSize(dim, dim);
-
    glutInitWindowPosition(100, 100);
-
    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-
    glutCreateWindow (argv[0]);
 
    Init();
 
    glutReshapeFunc(Reshape);
-   
    glutKeyboardFunc(KeyboardFunc);
-   
    glutMouseFunc(MouseFunc);
-
    glutDisplayFunc(Display);
    
    glutMainLoop();
 
    return 0;
 }
-
-

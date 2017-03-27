@@ -258,6 +258,33 @@ public:
       glLineWidth(1);
   }
 
+  void drawLine(float x0, float y0, float xn, float yn){
+      float sensitivity = 10.0;
+      float pasX = xn / sensitivity;
+      float pasY = yn / sensitivity;
+
+      float xM = x0 - 1; //normalize to actual origin
+      float yM = y0 - 1;
+
+      float overflowLength = 1.5;
+      if(xn > 1)
+         xn = overflowLength;
+      if(yn > 1)
+         yn = overflowLength;
+
+      glLineWidth(3);
+      glColor3f(1.0, 0.1, 0.1);
+      glBegin(GL_LINE_STRIP); 
+         while(xM < xn && yM < yn){
+            glVertex2f(xM,yM);
+
+            xM += pasX;
+            yM += pasY;
+         }
+      glEnd();
+      glLineWidth(1);
+  }
+
   // procedure AfisareSegmentDreapta3 (x0,y0,xn,yn : Z,
   //      var M : list of (Z x Z))
   // {
@@ -281,7 +308,8 @@ public:
   // }
   
   void AfisareSegmentDreapta3(){
-
+      //drawLine + algo + adapted for other cases (besides N-NE)
+      //
   }
 
   void afisare(int coloane, int randuri)
@@ -289,6 +317,8 @@ public:
 
    glColor3f(0.1, 0.1, 0.1);
    grilaCarteziana(coloane, randuri);
+
+   drawLine(0, 0, 5, 5);
   }
 };
 
@@ -302,7 +332,7 @@ void Display5() {
 
   //char display
   glRasterPos2d(-1.0,-0.9);
-  displayBitmap("Sierpinski carpet");
+  displayBitmap("AfisareSegmentDreapta3");
 
   glPushMatrix();
   glLoadIdentity();
@@ -321,9 +351,7 @@ void Display5() {
   CPunct p(-1.0, -1.0);
 
   csc.drawVector(p, v, 2, -30);
-  //csc.writePixel(2, 2, coloane, randuri);
-  //csc.writePixel(3, 5, coloane, randuri);
-  //
+  // approximation
   csc.writePixel(12, 0, coloane, randuri);
   csc.writePixel(11, 1, coloane, randuri);
   csc.writePixel(10, 1, coloane, randuri);
