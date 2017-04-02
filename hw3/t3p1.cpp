@@ -3,323 +3,182 @@
 #include <math.h>
 #include <assert.h>
 #include <float.h>
-
+#include <vector>
+#include <iostream>
 #include <string.h>
 
 #include <GL/freeglut.h>
 
 
-#define PI 3.141592
-// dimensiunea ferestrei in pixeli
 #define dim 300
+
+#define PI 3.141592
+using namespace std;
 
 unsigned char prevKey;
 int nivel = 0;
-
 
 //Display bitmap
 void displayBitmap(const char* str){
   for(int i = 0; i < strlen(str); i++){
     glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
   }
-  
+
 }
-
-
-//other classes
-
-class C2coord
-{
-public:
-  C2coord() 
-  {
-    m.x = m.y = 0;
-  }
-
-  C2coord(double x, double y) 
-  {
-    m.x = x;
-    m.y = y;
-  }
-
-  C2coord(const C2coord &p) 
-  {
-    m.x = p.m.x;
-    m.y = p.m.y;
-  }
-
-  C2coord &operator=(C2coord &p)
-  {
-    m.x = p.m.x;
-    m.y = p.m.y;
-    return *this;
-  }
-
-  int operator==(C2coord &p)
-  {
-    return ((m.x == p.m.x) && (m.y == p.m.y));
-  }
-
-protected:
-  struct SDate
-  {
-    double x,y;
-  } m;
-};
-
-class CPunct : public C2coord
-{
-public:
-  CPunct() : C2coord(0.0, 0.0)
-  {}
-
-  CPunct(double x, double y) : C2coord(x, y)
-  {}
-
-  CPunct &operator=(const CPunct &p)
-  {
-    m.x = p.m.x;
-    m.y = p.m.y;
-    return *this;
-  }
-
-  void getxy(double &x, double &y)
-  {
-    x = m.x;
-    y = m.y;
-  }
-
-  void setxy(double x, double y) //new, should work
-  {
-    m.x = x;
-    m.y = y;
-  }
-
-  int operator==(CPunct &p)
-  {
-    return ((m.x == p.m.x) && (m.y == p.m.y));
-  }
-
-  void marcheaza()
-  {
-    glBegin(GL_POINTS);
-      glVertex2d(m.x, m.y);
-    glEnd();
-  }
-
-  void print(FILE *fis)
-  {
-    fprintf(fis, "(%+f,%+f)", m.x, m.y);
-  }
-
-};
-
-class CVector : public C2coord
-{
-public:
-  CVector() : C2coord(0.0, 0.0)
-  {
-    normalizare();
-  }
-
-  CVector(double x, double y) : C2coord(x, y)
-  {
-    normalizare();
-  }
-
-  CVector &operator=(CVector &p)
-  {
-    m.x = p.m.x;
-    m.y = p.m.y;
-    return *this;
-  }
-
-  int operator==(CVector &p)
-  {
-    return ((m.x == p.m.x) && (m.y == p.m.y));
-  }
-
-  CPunct getDest(CPunct &orig, double lungime)
-  {
-    double x, y;
-    orig.getxy(x, y);
-    CPunct p(x + m.x * lungime, y + m.y * lungime);
-    return p;
-  }
-
-  void rotatie(double grade)
-  {
-    double x = m.x;
-    double y = m.y;
-    double t = 2 * (4.0 * atan(1)) * grade / 360.0;
-    m.x = x * cos(t) - y * sin(t);
-    m.y = x * sin(t) + y * cos(t);
-    normalizare();
-  }
-
-  void deseneaza(CPunct p, double lungime) 
-  {
-    double x, y;
-    p.getxy(x, y);
-    //glColor3f(1.0, 0.1, 0.1);
-    //glColor3f(0.1, 0.1, 0.1);
-    glBegin(GL_LINE_STRIP);
-      glVertex2d(x, y);
-      glVertex2d(x + m.x * lungime, y + m.y * lungime);
-    glEnd();
-  }
-
-  void print(FILE *fis)
-  {
-    fprintf(fis, "%+fi %+fj", C2coord::m.x, C2coord::m.y);
-  }
-
-private:
-  void normalizare()
-  {
-    double d = sqrt(C2coord::m.x * C2coord::m.x + C2coord::m.y * C2coord::m.y);
-    if (d != 0.0) 
-    {
-      C2coord::m.x = C2coord::m.x * 1.0 / d;
-      C2coord::m.y = C2coord::m.y * 1.0 / d;
-    }
-  }
-};
-
 
 
 class GrilaCarteziana
 {
 public:
-  void grilaCarteziana(int coloane, int randuri)
+  GrilaCarteziana(int linii, int coloane)
   {
-      //if (x >= -3.0 && x <= 3.0 && y >= -3.0 && y <= 3.0){
-      
-      double lungimeColoana = 2.0f / coloane;
-      double lungimeRand = 2.0f / randuri;
-
-      CVector v(0.0, 1.0);
-      CPunct p(-1.0, -1.0); //~<1 will display
-
-      for(int i = 0; i <= coloane; i++){
-         v.deseneaza(p, 2);
-
-         double x, y;
-         p.getxy(x, y); 
-         p.setxy(x + lungimeColoana, y);
-      }
-
-      v.rotatie(-90);
-      p.setxy(-1.0, 1.0);
-      for(int j = 0; j <= randuri; j++){
-         v.deseneaza(p, 2);
-
-         double x, y;
-         p.getxy(x, y); 
-         p.setxy(x, y - lungimeRand);
-      }
+    this->linii = linii ;
+    this->coloane = coloane;
+    this->lungimeLinie = 2.0/linii;
+    this->lungimeColoana = 2.0/coloane;
   }
+  void draw()
+  {
+    glColor3f(0.1, 0.9, 0.1);
 
-  void drawFilledCircle(float x, float y, float radius){
+    for(int i = 0; i <= linii; i++)
+    {
+        glBegin(GL_LINES);
+        glVertex2d(-1, -1+lungimeLinie*i);
+        glVertex2d(1, -1+lungimeColoana*i);
+        glEnd();
+    }
+
+    for(int j = 0; j <= coloane; j++)
+    {
+        glBegin(GL_LINES);
+        glVertex2d(-1+lungimeLinie*j, -1);
+        glVertex2d(-1+lungimeColoana*j, 1);
+        glEnd();
+    }
+  }
+  void drawFilledCircle(float x, float y, float radius)
+  {
       int i;
       int triangleAmount = 20; //# of triangles used to draw circle
-      
+
       //float radius = 0.8f; //radius
       float twicePi = 2.0f * PI;
-      
+
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
       glBegin(GL_TRIANGLE_FAN);
          glVertex2f(x, y); // center of circle
-         for(i = 0; i <= triangleAmount;i++) { 
-            glVertex2f(
-                     x + (radius * cos(i *  twicePi / triangleAmount)), 
-                y + (radius * sin(i * twicePi / triangleAmount))
-            );
+         for(i = 0; i <= triangleAmount;i++) {
+           glVertex2f(
+                    x + (radius * cos(i *  twicePi / triangleAmount)),
+               y + (radius * sin(i * twicePi / triangleAmount))
+           );
          }
       glEnd();
    }
 
-  void writePixel(int line, int column, int coloane, int randuri){
-      glColor3f(0.5, 0.5, 0.5);
-      double lungimeColoana = 2.0f / coloane;
-      double lungimeRand = 2.0f / randuri;
-
-      drawFilledCircle(-1.0 + column * lungimeColoana, 1.0 - line * lungimeRand, lungimeColoana/2.5);
-  }
-
-  void drawVector(CPunct p, CVector v, float lungime, float rotatie){
-     
-      glLineWidth(3);
-      glColor3f(1.0, 0.1, 0.1);
-
-      v.rotatie(rotatie);
-      v.deseneaza(p, lungime);
-
-      glLineWidth(1);
-  }
-
-  void drawLine(float x0, float y0, float xn, float yn){
-      float sensitivity = 10.0;
-      float pasX = xn / sensitivity;
-      float pasY = yn / sensitivity;
-
-      float xM = x0 - 1; //normalize to actual origin
-      float yM = y0 - 1;
-
-      float overflowLength = 1.5;
-      if(xn > 1)
-         xn = overflowLength;
-      if(yn > 1)
-         yn = overflowLength;
-
-      glLineWidth(3);
-      glColor3f(1.0, 0.1, 0.1);
-      glBegin(GL_LINE_STRIP); 
-         while(xM < xn && yM < yn){
-            glVertex2f(xM,yM);
-
-            xM += pasX;
-            yM += pasY;
-         }
-      glEnd();
-      glLineWidth(1);
-  }
-
-  // procedure AfisareSegmentDreapta3 (x0,y0,xn,yn : Z,
-  //      var M : list of (Z x Z))
-  // {
-  //   // valoarea initiala a variabile de decizie
-  //   // dx, dy sunt constante - a se vedea mai sus
-  //   int d = 2 * dy - dx;
-  //   int dE = 2 * dy;
-  //   int dNE = 2 * (dy - dx);
-  //   int x = x0, y = y0;
-  //   M = (x,y);
-  //   while (x < xn)
-  //   {
-  //     if (d <= 0) {
-  //       /* alegem E */ d += dE; x++; 
-  //     }
-  //     else { 
-  //       /* alegem NE */ d += dNE; x++; y++; 
-  //     }
-  //     M = M . (x, y);
-  //   }
-  // }
-  
-  void AfisareSegmentDreapta3(){
-      //drawLine + algo + adapted for other cases (besides N-NE)
-      //
-  }
-
-  void afisare(int coloane, int randuri)
+  void writePixel(pair<int, int> x)
   {
+      glColor3f(0.5, 0.5, 0.5);
 
-   glColor3f(0.1, 0.1, 0.1);
-   grilaCarteziana(coloane, randuri);
+      drawFilledCircle(-1.0 + x.first * lungimeColoana, -1.0 + x.second * lungimeLinie, lungimeColoana/2.5);
 
-   drawLine(0, 0, 5, 5);
+       glEnd();
   }
+
+  void drawLine(int x0, int y0, int xn, int yn)
+  {
+    glColor3f(1, 0.3, 0.1);
+    glLineWidth(2);
+    glBegin(GL_LINES);
+    glVertex2d(-1+lungimeLinie*x0, -1+lungimeColoana*y0);
+    glVertex2d(-1+lungimeLinie*xn, -1+lungimeColoana*yn);
+    glEnd();
+  }
+
+  void AfisareSegmentDreapta3(int x0, int y0, int xn, int yn, vector<pair<int, int> >& M)
+  {
+    int dx = xn - x0;
+    int dy = yn - y0;
+    float slope = (float)dx / (float)dy;
+    cout << slope << '\n';
+    int d = 2 * dy - dx;
+    int dE = 2 * dy;
+    int dNE = 2 * (dy - dx);
+    int x = x0;
+    int y = y0;
+    //pair<int, int> _x = make_pair(x, y);
+    M.push_back(make_pair(x, y));
+    while(x < xn)
+    {
+      if(d <= 0)
+      {
+          //cout << dE << '\n';
+          d += dE;
+          x++;
+      }
+      else
+      {
+        M.push_back(make_pair(x, y));
+        d += dNE;
+        x++;
+        y++;
+      }
+    }
+  }
+  void myAfisareSegmentDreapta(int x0, int y0, int xn, int yn, vector<pair<int, int> >& M, vector<pair<int, int> >& jos, vector<pair<int, int> >& sus)
+  {
+    int dx = xn - x0;
+    int dy = yn - y0;
+    float slope = (float)dy / (float)dx;
+    cout << slope << '\n';
+    int double_dx = 2*dx;
+    int double_dy = 2*dy;
+    int dNE = double_dy - double_dx;
+    int dNEPLUS = double_dy + double_dx;
+    int d, x, y;
+    if(-1 <= slope && slope < 0){
+      cout << "panta (-1, 0)-->corect" << '\n';
+      d = -double_dy - dx;
+      x = x0;
+      y = y0;
+      while(x <= xn){
+        M.push_back(make_pair(x, y));
+        jos.push_back(make_pair(x, y-1));
+        sus.push_back(make_pair(x, y+1));
+        if(d <= 0){
+          d -= double_dy;
+        }
+        else{
+          y--;
+          d -= dNEPLUS;
+        }
+        x++;
+      }
+    }
+    else if(0 <= slope && slope <= 1){
+      cout << "panta (0, 1) --> corect" << '\n';
+      d = double_dy - dx;
+     x = x0;
+     y = y0;
+     while(x <= xn)
+     {
+       M.push_back(make_pair(x, y));
+       if (d <= 0){
+         d += double_dy;
+       }
+       else{
+         y++;
+         d += dNE;
+       }
+       x++;
+     }
+    }
+  }
+
+private:
+  int linii, coloane;
+  float lungimeLinie, lungimeColoana;
 };
 
 
@@ -331,35 +190,44 @@ public:
 void Display5() {
 
   //char display
-  glRasterPos2d(-1.0,-0.9);
+  //glRasterPos2d(-1.0,-0.9);
   displayBitmap("AfisareSegmentDreapta3");
 
+  glScaled(0.8, 0.8, 1);
+  int first_x0 = 0, first_y0 = 0, first_xn = 15, first_yn = 7;
+  int second_x0 = 0, second_y0 = 15, second_xn = 15, second_yn = 10;
+
+  vector<pair<int, int> > first;
+  vector<pair<int, int> > second;
+
+  vector<pair<int, int> > j;
+  vector<pair<int, int> > s;
+
+  GrilaCarteziana csc(15, 15);
   glPushMatrix();
   glLoadIdentity();
-  glScaled(0.8, 0.8, 1);
-
-  GrilaCarteziana csc;
-
-
-
-  int coloane = 12;
-  int randuri = 12;
-
-  csc.afisare(coloane, randuri);
-
-  CVector v(0.0, 1.0);
-  CPunct p(-1.0, -1.0);
-
-  csc.drawVector(p, v, 2, -30);
-  // approximation
-  csc.writePixel(12, 0, coloane, randuri);
-  csc.writePixel(11, 1, coloane, randuri);
-  csc.writePixel(10, 1, coloane, randuri);
-  csc.writePixel(9, 2, coloane, randuri);
-  csc.writePixel(8, 3, coloane, randuri);
-  csc.writePixel(7, 3, coloane, randuri);
-  csc.writePixel(6, 4, coloane, randuri);
-
+  csc.draw();
+  //csc.writePixel(make_pair(14, 1));
+  csc.drawLine(first_x0, first_y0, first_xn, first_yn);
+  csc.drawLine(second_x0, second_y0, second_xn, second_yn);
+  //csc.AfisareSegmentDreapta3(first_x0, first_y0, first_xn, first_yn, first);
+  //csc.AfisareSegmentDreapta3(second_x0, second_y0, second_xn, second_yn, second);
+  csc.myAfisareSegmentDreapta(first_x0, first_y0, first_xn, first_yn, first, j, s);
+  csc.myAfisareSegmentDreapta(second_x0, second_y0, second_xn, second_yn, second, j, s);
+  cout << first.size() << '\n';
+  cout << second.size() << '\n';
+  for(int i= 0; i < first.size(); i++)
+  {
+    //cout << first[0].first << '\n';
+    csc.writePixel(first[i]);
+  }
+  for(int i= 0; i < second.size(); i++)
+  {
+    //cout << first[0].first << '\n';
+    csc.writePixel(second[i]);
+    csc.writePixel(j[i]);
+    csc.writePixel(s[i]);
+  }
 
   glPopMatrix();
 }
@@ -374,15 +242,10 @@ void Init(void) {
    glPolygonMode(GL_FRONT, GL_LINE);
 }
 
-void Display(void) 
+void Display(void)
 {
-  switch(prevKey) 
+  switch(prevKey)
   {
-    case '0':
-      glClear(GL_COLOR_BUFFER_BIT);
-      nivel = 0;
-      fprintf(stderr, "nivel = %d\n", nivel);
-      break;
     case '5':
       glClear(GL_COLOR_BUFFER_BIT);
       Display5();
@@ -394,12 +257,12 @@ void Display(void)
   glFlush();
 }
 
-void Reshape(int w, int h) 
+void Reshape(int w, int h)
 {
    glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 }
 
-void KeyboardFunc(unsigned char key, int x, int y) 
+void KeyboardFunc(unsigned char key, int x, int y)
 {
    prevKey = key;
    if (key == 27) // escape
@@ -407,11 +270,11 @@ void KeyboardFunc(unsigned char key, int x, int y)
    glutPostRedisplay();
 }
 
-void MouseFunc(int button, int state, int x, int y) 
+void MouseFunc(int button, int state, int x, int y)
 {
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
   glutInit(&argc, argv);
 
