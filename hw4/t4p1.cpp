@@ -96,55 +96,12 @@ public:
     glEnd();
   }
 
-  void myAfisareSegmentDreapta(int x0, int y0, int xn, int yn, vector<pair<int, int> >& M, vector<pair<int, int> >& jos, vector<pair<int, int> >& sus)
-  {
-    int dx = xn - x0;
-    int dy = yn - y0;
-    float slope = (float)dy / (float)dx;
-    cout << slope << '\n';
-    int double_dx = 2*dx;
-    int double_dy = 2*dy;
-    int dNE = double_dy - double_dx;
-    int dNEPLUS = double_dy + double_dx;
-    int d, x, y;
-    if(-1 <= slope && slope < 0){
-      cout << "panta (-1, 0)-->corect" << '\n';
-      d = -double_dy - dx;
-      x = x0;
-      y = y0;
-      while(x <= xn){
-        M.push_back(make_pair(x, y));
-        jos.push_back(make_pair(x, y-1));
-        sus.push_back(make_pair(x, y+1));
-        if(d <= 0){
-          d -= double_dy;
-        }
-        else{
-          y--;
-          d -= dNEPLUS;
-        }
-        x++;
-      }
-    }
-    else if(0 <= slope && slope <= 1){
-      cout << "panta (0, 1) --> corect" << '\n';
-      d = double_dy - dx;
-     x = x0;
-     y = y0;
-     while(x <= xn)
-     {
-       M.push_back(make_pair(x, y));
-       if (d <= 0){
-         d += double_dy;
-       }
-       else{
-         y++;
-         d += dNE;
-       }
-       x++;
-     }
-    }
-  }
+  //exe1
+  void AfisareCerc4();
+  //exe2
+  void UmplereElipsa();
+  //exe3
+  void UmplerePoligon();
 
 private:
   int linii, coloane;
@@ -167,12 +124,6 @@ void Display5() {
   int first_x0 = 0, first_y0 = 0, first_xn = 15, first_yn = 7;
   int second_x0 = 0, second_y0 = 15, second_xn = 15, second_yn = 10;
 
-  vector<pair<int, int> > first;
-  vector<pair<int, int> > second;
-
-  vector<pair<int, int> > j;
-  vector<pair<int, int> > s;
-
   GrilaCarteziana csc(15, 15);
   glPushMatrix();
   glLoadIdentity();
@@ -180,25 +131,7 @@ void Display5() {
   //csc.writePixel(make_pair(14, 1));
   csc.drawLine(first_x0, first_y0, first_xn, first_yn);
   csc.drawLine(second_x0, second_y0, second_xn, second_yn);
-  //csc.AfisareSegmentDreapta3(first_x0, first_y0, first_xn, first_yn, first);
-  //csc.AfisareSegmentDreapta3(second_x0, second_y0, second_xn, second_yn, second);
-  csc.myAfisareSegmentDreapta(first_x0, first_y0, first_xn, first_yn, first, j, s);
-  csc.myAfisareSegmentDreapta(second_x0, second_y0, second_xn, second_yn, second, j, s);
-  cout << first.size() << '\n';
-  cout << second.size() << '\n';
-  for(int i= 0; i < first.size(); i++)
-  {
-    //cout << first[0].first << '\n';
-    csc.writePixel(first[i]);
-  }
-  for(int i= 0; i < second.size(); i++)
-  {
-    //cout << first[0].first << '\n';
-    csc.writePixel(second[i]);
-    csc.writePixel(j[i]);
-    csc.writePixel(s[i]);
-  }
-
+  
   glPopMatrix();
 }
 
