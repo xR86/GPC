@@ -83,7 +83,7 @@ public:
 
       drawFilledCircle(-1.0 + x.first * lungimeColoana, -1.0 + x.second * lungimeLinie, lungimeColoana/2.5);
 
-       glEnd();
+      glEnd();
   }
 
   void drawLine(int x0, int y0, int xn, int yn)
@@ -91,10 +91,37 @@ public:
     glColor3f(1, 0.3, 0.1);
     glLineWidth(2);
     glBegin(GL_LINES);
-    glVertex2d(-1+lungimeLinie*x0, -1+lungimeColoana*y0);
-    glVertex2d(-1+lungimeLinie*xn, -1+lungimeColoana*yn);
+      glVertex2d(-1+lungimeLinie*x0, -1+lungimeColoana*y0);
+      glVertex2d(-1+lungimeLinie*xn, -1+lungimeColoana*yn);
     glEnd();
   }
+
+  //refactor
+  void drawEllipse(float cx, float cy, float rx, float ry, float radius, int num_segments) 
+  { 
+      glColor3f(1, 0.3, 0.1);
+
+      float theta = 2 * 3.1415926 / float(num_segments); 
+      float c = cosf(theta);//precalculate the sine and cosine
+      float s = sinf(theta);
+      float t;
+
+      float x = radius;//we start at angle = 0 
+      float y = 0; 
+
+      glBegin(GL_LINE_LOOP); 
+      for(int ii = 0; ii < num_segments; ii++) 
+      { 
+          //apply radius and offset
+          glVertex2f(-1 + x * rx + cx, -1 + y * ry + cy);//output vertex 
+
+          //apply the rotation matrix
+          t = x;
+          x = c * x - s * y;
+          y = s * t + c * y;
+      } 
+      glEnd(); 
+}
 
   //exe1
   void AfisareCerc4();
@@ -113,12 +140,12 @@ private:
 
 // ---------------DISPLAYS------------------------------------
 
-//Grila carteziana
-void Display5() {
+//AfisareCerc4
+void Display1() {
 
   //char display
   //glRasterPos2d(-1.0,-0.9);
-  displayBitmap("AfisareSegmentDreapta3");
+  displayBitmap("AfisareCerc4");
 
   glScaled(0.8, 0.8, 1);
   int first_x0 = 0, first_y0 = 0, first_xn = 15, first_yn = 7;
@@ -129,9 +156,57 @@ void Display5() {
   glLoadIdentity();
   csc.draw();
   //csc.writePixel(make_pair(14, 1));
-  csc.drawLine(first_x0, first_y0, first_xn, first_yn);
-  csc.drawLine(second_x0, second_y0, second_xn, second_yn);
-  
+  // csc.drawLine(first_x0, first_y0, first_xn, first_yn);
+  // csc.drawLine(second_x0, second_y0, second_xn, second_yn);
+  csc.drawEllipse(0, 0,  1.727, 1.727, 1.0, 100);
+
+  glPopMatrix();
+}
+
+//UmplereElipsa
+void Display2() {
+
+  //char display
+  //glRasterPos2d(-1.0,-0.9);
+  displayBitmap("UmplereElipsa");
+
+  glScaled(0.8, 0.8, 1);
+  int first_x0 = 0, first_y0 = 0, first_xn = 15, first_yn = 7;
+  int second_x0 = 0, second_y0 = 15, second_xn = 15, second_yn = 10;
+
+  GrilaCarteziana csc(15, 15);
+  glPushMatrix();
+  glLoadIdentity();
+  csc.draw();
+  //csc.writePixel(make_pair(14, 1));
+  // csc.drawLine(first_x0, first_y0, first_xn, first_yn);
+  // csc.drawLine(second_x0, second_y0, second_xn, second_yn);
+  csc.drawEllipse(1.0, 0.65,  2, 1.3, 0.5, 100);
+
+  glPopMatrix();
+}
+
+//UmplerePoligon
+void Display3() {
+
+  //char display
+  //glRasterPos2d(-1.0,-0.9);
+  displayBitmap("UmplerePoligon");
+
+  glScaled(0.8, 0.8, 1);
+
+  GrilaCarteziana csc(15, 15);
+  glPushMatrix();
+  glLoadIdentity();
+  csc.draw();
+
+  csc.drawLine(2, 3, 2, 9);
+  csc.drawLine(2, 9, 7, 7);
+  csc.drawLine(7, 7, 14, 11);
+  csc.drawLine(14, 11, 14, 5);
+  csc.drawLine(14, 5, 7, 1);
+  csc.drawLine(7, 1, 2, 3);
+
   glPopMatrix();
 }
 
@@ -149,9 +224,17 @@ void Display(void)
 {
   switch(prevKey)
   {
-    case '5':
+    case '1':
       glClear(GL_COLOR_BUFFER_BIT);
-      Display5();
+      Display1();
+      break;
+    case '2':
+      glClear(GL_COLOR_BUFFER_BIT);
+      Display2();
+      break;
+    case '3':
+      glClear(GL_COLOR_BUFFER_BIT);
+      Display3();
       break;
     default:
       break;
